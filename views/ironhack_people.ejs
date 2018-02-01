@@ -1,5 +1,11 @@
+<h2> VAMOS A VER EL EQUIPO <%= type.toUpperCase() %></h2>
 <ul>
     <% for (i=0; i<people.length; i++) { %>
         <li style="color:<%= people[i].color %>">El <%= type %> es <%= people[i].name %></li>
     <% } %>
 </ul>
+
+<form action="/equipo" method="POST">
+    <input type="text" name="type">
+    <input type="submit" value="GET TEAM">
+</form>

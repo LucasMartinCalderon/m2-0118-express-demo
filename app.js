@@ -1,5 +1,7 @@
 const express = require('express');
 const expressLayouts = require('express-ejs-layouts');
+const bodyParser = require('body-parser');
+const morgan     = require('morgan');
 
 // We create our own server named app
 // Express server handling requests and responses
@@ -10,6 +12,8 @@ app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 app.set('layout', 'layouts/main');
 
+app.use(morgan('dev'));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(expressLayouts);
 app.use(express.static('public'));
 
@@ -21,7 +25,7 @@ let data = {
         { name: "Claudia", color: "orange" },
         { name: "Sonia", color: "green" }
     ],
-    ta:[
+    ta: [
         { name: 'Manu del Pino', color: "red" },
         { name: "Manu Avello", color: "pink" },
         { name: "Victor", color: "orange" },
@@ -29,15 +33,24 @@ let data = {
     ]
 };
 
-// our first Route
-app.get('/ta', (request, response, next) => {
-    let type = 'ta';
-    response.render('ironhack_people', {type:type, people: data[type]});
+
+app.post('/equipo', (req, res) => {
+    let type = req.body.type;
+    if (type == "google"){
+        res.redirect(`http://www.google.com`);
+    }else{
+        res.redirect(`/equipo?type=${type}`);
+    }
 });
 
-app.get('/staff', (request, response, next) => {
-    let type = 'staff';
-    response.render('ironhack_people', {type:type,people: data[type]});
+// our first Route
+app.get('/equipo', (req, res) => {
+    let type = req.query.type;
+    let data_obj = {
+        type: (type || "")  + " es GET GUAY",
+        people: data[type] || []
+    }
+    res.render('ironhack_people', data_obj);
 });
 
 
